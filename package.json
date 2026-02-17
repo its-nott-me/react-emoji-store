@@ -1,0 +1,38 @@
+{
+  "name": "react-emoji-store",
+  "version": "1.0.1",
+  "description": "lightweight fluentui emoji api for react",
+  "keywords": [
+    "ui",
+    "emoji",
+    "fluentui",
+    "fluentui-emoji",
+    "animated-emoji",
+    "webp",
+    "emoji-parser",
+    "icons",
+    "react",
+    ""
+  ],
+  "type": "module",
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "build": "tsc"
+  },
+  "dependencies": {
+    "emoji-regex": "^10.6.0"
+  },
+  "peerDependencies": {
+    "react": ">=18",
+    "react-dom": ">=18"
+  },
+  "devDependencies": {
+    "typescript": "^5.9.3",
+    "@types/react": "^19.2.14",
+    "@types/react-dom": "^19.2.3"
+  }
+}
