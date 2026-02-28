@@ -1,27 +1,52 @@
 {
   "name": "react-emoji-store",
-  "version": "1.0.1",
-  "description": "lightweight fluentui emoji api for react",
+  "version": "1.1.0",
+  "description": "Lightweight Fluent Animated Emoji API for React",
+  "author": "its-nott-me",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/its-nott-me/react-emoji-store.git"
+  },
+  "bugs": {
+    "url": "https://github.com/its-nott-me/react-emoji-store/issues"
+  },
+  "homepage": "https://its-nott-me.github.io/emoji-store-demo/",
   "keywords": [
-    "ui",
+    "react",
     "emoji",
-    "fluentui",
-    "fluentui-emoji",
+    "fluent-emoji",
     "animated-emoji",
     "webp",
     "emoji-parser",
     "icons",
-    "react",
-    ""
+    "fluentui",
+    "",
+    "fluent-ui",
+    "microsoft",
+    "ui-components",
+    "accessibility"
   ],
   "type": "module",
-  "main": "./dist/index.js",
+  "sideEffects": false,
+  "main": "./dist/index.cjs",
+  "module": "./dist/index.js",
   "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js",
+      "require": "./dist/index.cjs",
+      "default": "./dist/index.js"
+    }
+  },
   "files": [
     "dist"
   ],
   "scripts": {
-    "build": "tsc"
+    "build": "tsup src/index.ts --format esm,cjs --dts --clean --minify",
+    "dev": "tsup src/index.ts --format esm,cjs --watch --dts",
+    "lint": "eslint src"
   },
   "dependencies": {
     "emoji-regex": "^10.6.0"
@@ -31,8 +56,9 @@
     "react-dom": ">=18"
   },
   "devDependencies": {
-    "typescript": "^5.9.3",
     "@types/react": "^19.2.14",
-    "@types/react-dom": "^19.2.3"
+    "@types/react-dom": "^19.2.3",
+    "tsup": "^8.5.1",
+    "typescript": "^5.9.3"
   }
 }
