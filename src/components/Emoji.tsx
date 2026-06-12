@@ -17,24 +17,75 @@ export const Emoji: React.FC<EmojiProps> = ({
     style,
 }) => {
     const provider = useEmojiProvider();
-    const [hasError, setHasError] = useState(false);
 
+    /**
+     * Tracks which fallback URL we're currently trying.
+     *
+     * Example:
+     * 0 = animated
+     * 1 = 3D
+     *
+     * If all URLs fail, we'll render the native emoji.
+     */
+    const [currentUrlIndex, setCurrentUrlIndex] = useState(0);
+
+    /**
+     * Reset fallback state whenever the emoji changes.
+     */
     useEffect(() => {
-        setHasError(false);
+        setCurrentUrlIndex(0);
     }, [emoji]);
 
-    const assetUrl = useMemo(() => {
+    /**
+     * Generate all candidate URLs for this emoji.
+     *
+     * Example:
+     * [
+     *   ".../animated/1f600.webp",
+     *   ".../3d/1f600.webp"
+     * ]
+     */
+    const assetUrls = useMemo(() => {
         try {
             const { baseEmoji, tone } = extractTone(emoji);
             const codepoint = getCodepoint(baseEmoji);
-            return provider.getUrl({ codepoint, tone: tone ?? undefined });
+
+            return provider.getUrls({
+                codepoint,
+                tone: tone ?? undefined,
+            });
         } catch (error) {
-            // console.error("Failed to resolve emoji asset:", error);
             return null;
         }
     }, [emoji, provider]);
 
-    if (hasError || !assetUrl) {
+    /**
+     * If URL generation failed,
+     * render the native emoji.
+     */
+    if (!assetUrls) {
+        return (
+            <span
+                className={className}
+                style={{
+                    fontSize: size,
+                    lineHeight: 1,
+                    verticalAlign: "middle",
+                    display: "inline-block",
+                    ...style,
+                }}
+                title={emoji}
+            >
+                {emoji}
+            </span>
+        );
+    }
+
+    /**
+     * If we've exhausted every fallback URL,
+     * render the native emoji.
+     */
+    if (currentUrlIndex >= assetUrls.length) {
         return (
             <span
                 className={className}
@@ -54,7 +105,7 @@ export const Emoji: React.FC<EmojiProps> = ({
 
     return (
         <img
-            src={assetUrl}
+            src={assetUrls[currentUrlIndex]}
             alt={emoji}
             width={size}
             height={size}
@@ -62,7 +113,14 @@ export const Emoji: React.FC<EmojiProps> = ({
             loading="lazy"
             aria-label={emoji}
             draggable={false}
-            onError={() => setHasError(true)}
+            onError={() => {
+                /**
+                 * Current asset failed.
+                 * Try the next fallback URL.
+                 */
+                console.log(assetUrls[currentUrlIndex]);
+                setCurrentUrlIndex((prev) => prev + 1);
+            }}
             style={{
                 verticalAlign: "middle",
                 display: "inline-block",
